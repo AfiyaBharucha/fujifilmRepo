@@ -4,7 +4,6 @@ httpResponse.setHeader("Cache-Control", "max-age=0, no-cache, no-store, must-rev
 httpResponse.setHeader("Pragma", "no-cache"); // HTTP 1.0
 httpResponse.setDateHeader("Expires", 0);
 %>
-
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
@@ -13,6 +12,9 @@ httpResponse.setDateHeader("Expires", 0);
 <meta name="description" content=" Fuji Film">
 <meta name="keywords" content="fujifilm, eCommerce, creative, html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta Http-Equiv="Cache-Control" Content="no-cache">
+<meta Http-Equiv="Pragma" Content="no-cache">
+<meta Http-Equiv="Expires" Content="0"> 
 
 <!-- Favicon -->
 <link href="img/favicon.ico" rel="shortcut icon" />
@@ -49,13 +51,15 @@ httpResponse.setDateHeader("Expires", 0);
 
 </head>
 <body>
+
+<%response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate"); %>
 	<!-- Page Preloder -->
 	<div id="preloder">
 		<div class="loader"></div>
 	</div>
 
 	<!-- Included header section -->
-    <jsp:include page="header.jsp" />
+   <jsp:include page="CustomerView.jsp"></jsp:include>
 
 	<!-- Page info -->
 	<div class="page-top-info">
@@ -72,7 +76,9 @@ httpResponse.setDateHeader("Expires", 0);
 	<!-- Register section -->
 	<section class="contact-section" style="width: 100%">
 		<div class="container" style="width: 100%">
-			<h4>TODO: implement customer tabs here.</h4>
+			
+			
+			
 		</div>
 	</section>
 	<!-- Register section end -->

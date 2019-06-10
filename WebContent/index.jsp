@@ -8,49 +8,57 @@ httpResponse.setDateHeader("Expires", 0);
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-	<title>Fuji Film</title>
-	<meta charset="UTF-8">
-	<meta name="description" content=" Fuji Film">
-	<meta name="keywords" content="fujifilm, eCommerce, creative, html">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- Favicon -->
-	<link href="img/favicon.ico" rel="shortcut icon"/>
+<title>Fuji Film</title>
+<meta charset="UTF-8">
+<meta name="description" content=" Fuji Film">
+<meta name="keywords" content="fujifilm, eCommerce, creative, html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta Http-Equiv="Cache-Control" Content="no-cache">
+<meta Http-Equiv="Pragma" Content="no-cache">
+<meta Http-Equiv="Expires" Content="0"> 
+<!-- Favicon -->
+<link href="img/favicon.ico" rel="shortcut icon" />
 
-	<!-- Google Font -->
-	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,300i,400,400i,700,700i" rel="stylesheet">
+<!-- Google Font -->
+<link
+	href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,300i,400,400i,700,700i"
+	rel="stylesheet">
 
 
-	<!-- Stylesheets -->
-	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/font-awesome.min.css"/>
-	<link rel="stylesheet" href="css/flaticon.css"/>
-	<link rel="stylesheet" href="css/slicknav.min.css"/>
-	<link rel="stylesheet" href="css/jquery-ui.min.css"/>
-	<link rel="stylesheet" href="css/owl.carousel.min.css"/>
-	<link rel="stylesheet" href="css/animate.css"/>
-	<link rel="stylesheet" href="css/style.css"/>
+<!-- Stylesheets -->
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/font-awesome.min.css" />
+<link rel="stylesheet" href="css/flaticon.css" />
+<link rel="stylesheet" href="css/slicknav.min.css" />
+<link rel="stylesheet" href="css/jquery-ui.min.css" />
+<link rel="stylesheet" href="css/owl.carousel.min.css" />
+<link rel="stylesheet" href="css/animate.css" />
+<link rel="stylesheet" href="css/style.css" />
 
-    <script>
+<script>
 	window.onpageshow = function(event) {
-	    if (event.persisted) {
-	        window.location.reload() 
-	    }
+		if (event.persisted) {
+			window.location.reload()
+		}
 	};
-	</script>
-	
-	<!--[if lt IE 9]>
+</script>
+
+<!--[if lt IE 9]>
 		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 	  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
 </head>
 <body>
+	<%
+		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
+	%>
 	<!-- Page Preloder -->
 	<div id="preloder">
 		<div class="loader"></div>
 	</div>
 	<!-- Included header section -->
-    <jsp:include page="header.jsp" /> 
+	<jsp:include page="header.jsp" />
 
 	<!-- Hero section -->
 	<section class="hero-section">
@@ -61,9 +69,12 @@ httpResponse.setDateHeader("Expires", 0);
 						<div class="col-xl-6 col-lg-7 text-white">
 							<span>New Arrivals</span>
 							<h2>the future of HISTORY</h2>
-							<p>Fujifilm is one of the best regarded camera brands worldwide. With our award-winning range of cameras suited to Pros and enthusiasts alike, we're sure there's a camera in our range that will interest you. </p>
-							<a href="login.jsp" class="site-btn sb-line">SIGN IN</a>
-							<a href="register.jsp" class="site-btn sb-white">REGISTER</a>
+							<p>Fujifilm is one of the best regarded camera brands
+								worldwide. With our award-winning range of cameras suited to
+								Pros and enthusiasts alike, we're sure there's a camera in our
+								range that will interest you.</p>
+							<a href="login.jsp" class="site-btn sb-line">SIGN IN</a> <a
+								href="register.jsp" class="site-btn sb-white">REGISTER</a>
 						</div>
 					</div>
 					<div class="offer-card text-white">
@@ -79,9 +90,12 @@ httpResponse.setDateHeader("Expires", 0);
 						<div class="col-xl-6 col-lg-7 text-white">
 							<span>New Arrivals</span>
 							<h2>the future of HISTORY</h2>
-							<p>Fujifilm is one of the best regarded camera brands worldwide. With our award-winning range of cameras suited to Pros and enthusiasts alike, we're sure there's a camera in our range that will interest you. </p>
-							<a href="login.jsp" class="site-btn sb-line">SIGN IN</a>
-							<a href="register.jsp" class="site-btn sb-white">REGISTER</a>
+							<p>Fujifilm is one of the best regarded camera brands
+								worldwide. With our award-winning range of cameras suited to
+								Pros and enthusiasts alike, we're sure there's a camera in our
+								range that will interest you.</p>
+							<a href="login.jsp" class="site-btn sb-line">SIGN IN</a> <a
+								href="register.jsp" class="site-btn sb-white">REGISTER</a>
 						</div>
 					</div>
 					<div class="offer-card text-white">
@@ -145,13 +159,14 @@ httpResponse.setDateHeader("Expires", 0);
 					<div class="pi-pic">
 						<img src="./img/product/1.jpg" alt="">
 						<div class="pi-links">
-							<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-							<a href="login.jsp" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+							<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD
+									TO CART</span></a> <a href="login.jsp" class="wishlist-btn"><i
+								class="flaticon-heart"></i></a>
 						</div>
 					</div>
 					<div class="pi-text">
 						<h6>$9,999.95</h6>
-						<p>Fujifilm GFX 100 </p>
+						<p>Fujifilm GFX 100</p>
 					</div>
 				</div>
 				<div class="product-item">
@@ -159,8 +174,9 @@ httpResponse.setDateHeader("Expires", 0);
 						<div class="tag-new">New</div>
 						<img src="./img/product/4.jpg" alt="">
 						<div class="pi-links">
-							<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-							<a href="login.jsp" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+							<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD
+									TO CART</span></a> <a href="login.jsp" class="wishlist-btn"><i
+								class="flaticon-heart"></i></a>
 						</div>
 					</div>
 					<div class="pi-text">
@@ -172,42 +188,45 @@ httpResponse.setDateHeader("Expires", 0);
 					<div class="pi-pic">
 						<img src="./img/product/3.jpg" alt="">
 						<div class="pi-links">
-							<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-							<a href="login.jsp" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+							<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD
+									TO CART</span></a> <a href="login.jsp" class="wishlist-btn"><i
+								class="flaticon-heart"></i></a>
 						</div>
 					</div>
 					<div class="pi-text">
 						<h6>$3,999.00</h6>
-						<p>FUJIFILM GFX 50R </p>
+						<p>FUJIFILM GFX 50R</p>
 					</div>
 				</div>
 				<div class="product-item">
-						<div class="pi-pic">
-							<img src="./img/product/2.jpg" alt="">
-							<div class="pi-links">
-								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-								<a href="login.jsp" class="wishlist-btn"><i class="flaticon-heart"></i></a>
-							</div>
-						</div>
-						<div class="pi-text">
-							<h6>$4,499.00</h6>
-							<p>FUJIFILM GFX 50S </p>
+					<div class="pi-pic">
+						<img src="./img/product/2.jpg" alt="">
+						<div class="pi-links">
+							<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD
+									TO CART</span></a> <a href="login.jsp" class="wishlist-btn"><i
+								class="flaticon-heart"></i></a>
 						</div>
 					</div>
+					<div class="pi-text">
+						<h6>$4,499.00</h6>
+						<p>FUJIFILM GFX 50S</p>
+					</div>
+				</div>
 				<div class="product-item">
-						<div class="pi-pic">
-						    <div class="tag-new">New</div>
-							<img src="./img/product/5.jpg" alt="">
-							<div class="pi-links">
-								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-								<a href="login.jsp" class="wishlist-btn"><i class="flaticon-heart"></i></a>
-							</div>
-						</div>
-						<div class="pi-text">
-							<h6>$859.00</h6>
-							<p>FUJIFILM X-PRO2 </p>
+					<div class="pi-pic">
+						<div class="tag-new">New</div>
+						<img src="./img/product/5.jpg" alt="">
+						<div class="pi-links">
+							<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD
+									TO CART</span></a> <a href="login.jsp" class="wishlist-btn"><i
+								class="flaticon-heart"></i></a>
 						</div>
 					</div>
+					<div class="pi-text">
+						<h6>$859.00</h6>
+						<p>FUJIFILM X-PRO2</p>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -233,13 +252,14 @@ httpResponse.setDateHeader("Expires", 0);
 						<div class="pi-pic">
 							<img src="./img/product/6.jpg" alt="">
 							<div class="pi-links">
-								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-								<a href="login.jsp" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD
+										TO CART</span></a> <a href="login.jsp" class="wishlist-btn"><i
+									class="flaticon-heart"></i></a>
 							</div>
 						</div>
 						<div class="pi-text">
 							<h6>$145,000</h6>
-							<p>FUJIFILM FDR GO PLUS 500 </p>
+							<p>FUJIFILM FDR GO PLUS 500</p>
 						</div>
 					</div>
 				</div>
@@ -248,13 +268,14 @@ httpResponse.setDateHeader("Expires", 0);
 						<div class="pi-pic">
 							<img src="./img/product/13.jpg" alt="">
 							<div class="pi-links">
-								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-								<a href="login.jsp" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD
+										TO CART</span></a> <a href="login.jsp" class="wishlist-btn"><i
+									class="flaticon-heart"></i></a>
 							</div>
 						</div>
 						<div class="pi-text">
 							<h6>$215,000</h6>
-							<p>FUJIFILM FDR SMART-X </p>
+							<p>FUJIFILM FDR SMART-X</p>
 						</div>
 					</div>
 				</div>
@@ -263,13 +284,14 @@ httpResponse.setDateHeader("Expires", 0);
 						<div class="pi-pic">
 							<img src="./img/product/7.jpg" alt="">
 							<div class="pi-links">
-								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-								<a href="login.jsp" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD
+										TO CART</span></a> <a href="login.jsp" class="wishlist-btn"><i
+									class="flaticon-heart"></i></a>
 							</div>
 						</div>
 						<div class="pi-text">
 							<h6>$6.99</h6>
-							<p>FUJIFILM SDHC 8GB </p>
+							<p>FUJIFILM SDHC 8GB</p>
 						</div>
 					</div>
 				</div>
@@ -278,29 +300,31 @@ httpResponse.setDateHeader("Expires", 0);
 						<div class="pi-pic">
 							<img src="./img/product/9.jpg" alt="">
 							<div class="pi-links">
-								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-								<a href="login.jsp" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD
+										TO CART</span></a> <a href="login.jsp" class="wishlist-btn"><i
+									class="flaticon-heart"></i></a>
 							</div>
 						</div>
 						<div class="pi-text">
 							<h6>$29.00</h6>
-							<p>FUJIFILM SDHC 64GB </p>
+							<p>FUJIFILM SDHC 64GB</p>
 						</div>
 					</div>
 				</div>
 				<div class="col-lg-3 col-sm-6">
 					<div class="product-item">
 						<div class="pi-pic">
-						    <div class="tag-sale">ON SALE</div>
+							<div class="tag-sale">ON SALE</div>
 							<img src="./img/product/8.jpg" alt="">
 							<div class="pi-links">
-								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-								<a href="login.jsp" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD
+										TO CART</span></a> <a href="login.jsp" class="wishlist-btn"><i
+									class="flaticon-heart"></i></a>
 							</div>
 						</div>
 						<div class="pi-text">
 							<h6>$67.00</h6>
-							<p>FUJIFILM LTO ULTRIUM 7 </p>
+							<p>FUJIFILM LTO ULTRIUM 7</p>
 						</div>
 					</div>
 				</div>
@@ -309,13 +333,14 @@ httpResponse.setDateHeader("Expires", 0);
 						<div class="pi-pic">
 							<img src="./img/product/10.jpg" alt="">
 							<div class="pi-links">
-								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-								<a href="login.jsp" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD
+										TO CART</span></a> <a href="login.jsp" class="wishlist-btn"><i
+									class="flaticon-heart"></i></a>
 							</div>
 						</div>
 						<div class="pi-text">
 							<h6>$5,500.00</h6>
-							<p>FUJIFILM PRIMA T2 </p>
+							<p>FUJIFILM PRIMA T2</p>
 						</div>
 					</div>
 				</div>
@@ -324,13 +349,14 @@ httpResponse.setDateHeader("Expires", 0);
 						<div class="pi-pic">
 							<img src="./img/product/11.jpg" alt="">
 							<div class="pi-links">
-								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-								<a href="login.jsp" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD
+										TO CART</span></a> <a href="login.jsp" class="wishlist-btn"><i
+									class="flaticon-heart"></i></a>
 							</div>
 						</div>
 						<div class="pi-text">
 							<h6>$699.00</h6>
-							<p>Fujifilm XF 18-135mm f/3.5-5.6 R LM OIS WR Lens </p>
+							<p>Fujifilm XF 18-135mm f/3.5-5.6 R LM OIS WR Lens</p>
 						</div>
 					</div>
 				</div>
@@ -339,13 +365,14 @@ httpResponse.setDateHeader("Expires", 0);
 						<div class="pi-pic">
 							<img src="./img/product/12.jpg" alt="">
 							<div class="pi-links">
-								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-								<a href="login.jsp" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+								<a href="login.jsp" class="add-card"><i class="flaticon-bag"></i><span>ADD
+										TO CART</span></a> <a href="login.jsp" class="wishlist-btn"><i
+									class="flaticon-heart"></i></a>
 							</div>
 						</div>
 						<div class="pi-text">
 							<h6>$3,999.00</h6>
-							<p>FUJIFILM X-T1 </p>
+							<p>FUJIFILM X-T1</p>
 						</div>
 					</div>
 				</div>
@@ -372,7 +399,7 @@ httpResponse.setDateHeader("Expires", 0);
 	<!-- Banner section end  -->
 
 	<!-- Included footer section -->
-	<jsp:include page="footer.jsp" /> 
+	<jsp:include page="footer.jsp" />
 
 	<!--====== Javascripts & Jquery ======-->
 	<script src="js/jquery-3.2.1.min.js"></script>
@@ -384,5 +411,5 @@ httpResponse.setDateHeader("Expires", 0);
 	<script src="js/jquery-ui.min.js"></script>
 	<script src="js/main.js"></script>
 
-	</body>
+</body>
 </html>

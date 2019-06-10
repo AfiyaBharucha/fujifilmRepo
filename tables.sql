@@ -10,3 +10,6 @@ create table customer
 last_name varchar(255) not null, emailid varchar(255) not null unique, address varchar(255) not null, 
 contact varchar(255) not null, username varchar(255) not null unique, password varchar(255) not null
 );
+
+create table product_master
+(product_id int auto_increment primary key,product_name varchar(255) unique,price varchar(25),Qty varchar(25));
