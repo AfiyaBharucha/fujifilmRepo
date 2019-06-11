@@ -60,12 +60,12 @@
 		document.getElementById('productId').value = selectedProductId;
 	}
 
-	function populateProduct() {
-		var selectBox = document.getElementById('select');
-		var selectedProductId = selectBox.options[selectBox.selectedIndex].value;
-		document.getElementById('pId').value = selectedProductId;
+// 	function populateProduct() {
+// 		var selectBox = document.getElementById('select');
+// 		var selectedProductId = selectBox.options[selectBox.selectedIndex].value;
+// 		document.getElementById('pId').value = selectedProductId;
 
-	}
+// 	}
 
 	function addRow(tableID) {
 
