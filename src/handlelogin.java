@@ -36,7 +36,7 @@ public class handlelogin extends HttpServlet {
 		request.getSession().invalidate();
 		HttpSession session = request.getSession();
 		String username = request.getParameter("username");
-		String password = DigestUtils.sha256Hex(request.getParameter("password"));
+		String password = request.getParameter("password");
 		String employeeid = request.getParameter("employee_id");
 		if (employeeid.length() > 0) {
 			isEmployee = true;
@@ -53,10 +53,8 @@ public class handlelogin extends HttpServlet {
 			PreparedStatement preparedStmt = null;
 			ResultSet rs;
 			String equery = "select password,employeeid from employee where username=?";
-			String cquery = "select password from customer where username=?";
-			
-			
-			
+			String cquery = "select password,id from customer where username=?";
+
 			if (isEmployee) {
 				preparedStmt = conn.prepareStatement(equery);
 				preparedStmt.setString(1, username);
@@ -65,10 +63,11 @@ public class handlelogin extends HttpServlet {
 				preparedStmt = conn.prepareStatement(cquery);
 				preparedStmt.setString(1, username);
 				rs = preparedStmt.executeQuery();
-				
+
 			}
 			while (rs.next()) {
 				if (!rs.getString(1).equals(password)) {
+
 					session.setAttribute("errmsg", username + " login failed :-(. ");
 					response.sendRedirect("error.jsp");
 					return;
@@ -86,6 +85,8 @@ public class handlelogin extends HttpServlet {
 					if (isEmployee) {
 						response.sendRedirect("employee.jsp");
 					} else {
+						String cid = rs.getString(2);
+						session.setAttribute("cId", cid);
 						response.sendRedirect("customer.jsp");
 					}
 					return;

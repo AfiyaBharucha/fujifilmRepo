@@ -1,4 +1,5 @@
 
+<%@page import="java.sql.ResultSetMetaData"%>
 <%@page import="com.mysql.cj.exceptions.RSAException"%>
 <%@page import="java.sql.Connection"%>
 <%@ page import="java.util.*"%>
@@ -6,6 +7,7 @@
 <%@page import="Fujifilm.Connection.ConnectionManager"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.PreparedStatement"%>
+
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
@@ -37,17 +39,73 @@
 <link rel="stylesheet" href="css/animate.css" />
 <link rel="stylesheet" href="css/style.css" />
 
+<%
+	ResultSet rs;
+	PreparedStatement ps;
+	Connection con = ConnectionManager.getCustConnection();
+	Statement stmt = con.createStatement();
+	rs = stmt.executeQuery("select product_id,product_name from product_master");
+%>
+
 <script>
 	window.onpageshow = function(event) {
 		if (event.persisted) {
 			window.location.reload()
 		}
 	};
-	
-	function populateProductId(){
-		var selectBox=document.getElementById('selectbox');
-		var selectedProductId=selectBox.options[selectBox.selectedIndex].value;
-		document.getElementById('productId').value=selectedProductId;
+
+	function populateProductId() {
+		var selectBox = document.getElementById('selectbox');
+		var selectedProductId = selectBox.options[selectBox.selectedIndex].value;
+		document.getElementById('productId').value = selectedProductId;
+	}
+
+	function populateProduct() {
+		var selectBox = document.getElementById('select');
+		var selectedProductId = selectBox.options[selectBox.selectedIndex].value;
+		document.getElementById('pId').value = selectedProductId;
+
+	}
+
+	function addRow(tableID) {
+
+		var table = document.getElementById(tableID);
+		var rowCount = table.rows.length;
+		var counts = rowCount - 1;
+		var row = table.insertRow(rowCount);
+
+		var cell1 = row.insertCell(0);
+		var sno = document.createElement("input");
+		sno.type = "text";
+		sno.name = "inquiries[" + counts + "].sNo[]";
+		cell1.appendChild(sno);
+
+		var cell2 = row.insertCell(1);
+		var pname = document.createElement("select");
+		var elemen = document.getElementById("selectbox");
+		var ele = document.createElement("option");
+		pname.id = "s";
+		pname.name = "inquiries[" + counts + "].pName[]";
+		pname.innerHTML = pname.innerHTML + elemen.innerHTML;
+		cell2.appendChild(pname);
+
+		var cell3 = row.insertCell(2);
+		var pno = document.createElement("input");
+		pno.type = "text";
+		pno.name = "inquiries[" + counts + "].pNo[]";
+		pno.id = "in";
+		//var sel = document.getElementById('select');
+		//var op = document.getElementById('ele');
+		//pno.value = "";
+
+		cell3.appendChild(pno);
+
+		var cell4 = row.insertCell(3);
+		var Qty = document.createElement("input");
+		Qty.type = "text";
+		Qty.name = "inquiries[" + counts + "].qty[]";
+		cell4.appendChild(Qty);
+
 	}
 </script>
 
@@ -59,35 +117,24 @@
 </head>
 <body>
 
-
-
-	<%!int clicks = 101;%>
+	<%
+		int clicks;
+		Random rand = new Random();
+		clicks = rand.nextInt(90000) + 10000;
+		session.getAttribute("cId");
+		session.setAttribute("clicks", clicks);
+	%>
 	<%
 		try {
+
 			ResultSet resultset;
-			ResultSet rs;
 			PreparedStatement pstmt;
 			Connection conn = ConnectionManager.getCustConnection();
-
 			Statement statement = conn.createStatement();
-
 			resultset = statement.executeQuery("select product_id,product_name from product_master");
 	%>
 
 
-
-
-
-	<%--  <%String param = request.getParameter("count");
-
-		try {
-
-			int i = Integer.parseInt(param);
-			clicks++;
-		} catch (NumberFormatException e) {
-		}
-
-	%>  --%>
 	<%
 		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
 	%>
@@ -103,7 +150,8 @@
 	<div class="page-top-info">
 		<div class="container">
 			<h4>
-				Customer(<%=session.getAttribute("who")%>)
+				Customer(<%=session.getAttribute("who")%>)<br />
+
 			</h4>
 			<div class="site-pagination">
 				<a href="CustomerView.jsp">Customer</a> / <a href="Inquiry.jsp">Inquiry</a><br />
@@ -118,12 +166,13 @@
 	<!-- Register section -->
 	<section class="contact-section" style="width: 100%">
 		<div class="container" style="width: 100%">
-			<form action="" method="post" style="border: 2px solid red">
+			<form action="HandleInquiry" method="post"
+				style="border: 2px solid red" id="f">
 
-				<table class="table">
+				<table class="table" id="dataTable">
 
 					<tr align="center" bgcolor="Black">
-						<td colspan="4"><h3>
+						<td colspan="5"><h3>
 								<font color="white">Inquiry Form</font>
 							</h3></td>
 					</tr>
@@ -137,7 +186,7 @@
 					</tr>
 					<tr>
 						<td><b>Last Name :</b></td>
-						<td><input type="text" name="address" required="required" /></td>
+						<td><input type="text" name="lastName" required="required" /></td>
 						<td><b>Inquiry No: #INO<%=clicks%></b></td>
 					</tr>
 					<tr>
@@ -152,9 +201,7 @@
 						<td><b>Email id :</b></td>
 						<td><input type="email" name="email" required="required" /></td>
 					</tr>
-					<tr>
-						<td><input type="hidden" name="form1" value="login" /></td>
-					</tr>
+
 					<tr>
 						<td><b>S.No:</b></td>
 
@@ -165,14 +212,16 @@
 					</tr>
 
 					<tr>
-						<td><input type="number" name="sno" value="sno"
+						<td><input type="number" name="sno[0]" value="sno"
 							required="required"></td>
 
 						<td><select id="selectbox" onchange="populateProductId();"
-							name="pname">
+							name="pname[0]">
+								<option>---- Select Product ----</option>
 								<%
 									while (resultset.next()) {
 								%>
+
 								<option value="<%=resultset.getString(1)%>"><%=resultset.getString(2)%></option>
 								<%
 									}
@@ -182,22 +231,26 @@
  		out.println("wrong entry" + e);
  	}
  %></td>
-						<td><input type="number" required="required" name="pno"
+						<td><input type="number" required="required" name="pno[0]"
 							id="productId" value="" disabled="disabled"></td>
-						<td><input type="text" name="pno"></td>
+						<td><input type="text" name="qty[0]"></td>
+						<td><input type="button" value="Add" name="add" id="add"
+							onclick="addRow('dataTable');"></td>
+					<tr>
+						<td colspan="4"></td>
 					</tr>
 
-					<tr>
-					<tr>
-						<td colspan="4"><div align="right">
-								<button class="site-btn">
-									<b> Submit </b>
-								</button>
-							</div></td>
-					</tr>
+
 
 
 				</table>
+
+				<div align="center">
+					<button class="site-btn">
+						<b> Submit </b>
+					</button>
+				</div>
+				<br />
 			</form>
 
 		</div>

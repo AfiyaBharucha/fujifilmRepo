@@ -13,12 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.apache.commons.codec.digest.DigestUtils;
-
 import Fujifilm.Connection.ConnectionManager;
-
-
 
 @WebServlet("/handleregister")
 public class handleregister extends HttpServlet {
@@ -26,9 +21,8 @@ public class handleregister extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-			}
+	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		boolean isEmployee = false;
@@ -40,7 +34,7 @@ public class handleregister extends HttpServlet {
 		String contact = request.getParameter("contact");
 		String employeeid = request.getParameter("employee_id");
 		String username = request.getParameter("username");
-		String password = DigestUtils.sha256Hex(request.getParameter("password"));
+		String password = request.getParameter("password");
 		if (employeeid.length() > 0) {
 			isEmployee = true;
 		}
@@ -51,7 +45,7 @@ public class handleregister extends HttpServlet {
 		}
 		Connection conn = null;
 		try {
-			 conn = ConnectionManager.getCustConnection();
+			conn = ConnectionManager.getCustConnection();
 			System.out.println(conn);
 			PreparedStatement preparedStmt;
 			String cquery = "insert into customer (first_name, last_name, emailid, address, contact, username, password) values (?,?,?,?,?,?,?)";
@@ -92,7 +86,7 @@ public class handleregister extends HttpServlet {
 				try {
 					conn.close();
 				} catch (SQLException e) {
-					
+
 					e.printStackTrace();
 				}
 			}
