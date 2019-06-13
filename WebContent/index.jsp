@@ -52,6 +52,7 @@ httpResponse.setDateHeader("Expires", 0);
 <body>
 	<%
 		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
+	session.invalidate();
 	%>
 	<!-- Page Preloder -->
 	<div id="preloder">
