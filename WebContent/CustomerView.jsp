@@ -59,7 +59,7 @@
 				<ul class="main-menu">
 					<li><a href="Cst_Inquiry.jsp">Inquiry</a></li>
 					<li><a href="blog.jsp">Quotation</a></li>
-					<li><a href="about.jsp">Purchase Order</a></li>
+					<li><a href="PurchaseOrder.jsp">Purchase Order</a></li>
 					<li><a href="contact.jsp">Invoice</a></li>
 					<li><a href="contact.jsp">Payment</a></li>
 					<li><a href="PayReceipt.jsp">Payment Receipt</a></li>

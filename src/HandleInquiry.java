@@ -1,8 +1,6 @@
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,23 +24,21 @@ public class HandleInquiry extends HttpServlet {
 		String Qty = request.getParameter("qty");
 		Connection conn = ConnectionManager.getCustConnection();
 		PreparedStatement pstmt = null;
-		request.setAttribute("inquiryId", inquiryId);
-		request.setAttribute("productNo", productNo);
-		request.setAttribute("cid", cid);
-		request.setAttribute("Qty", Qty);
-		String query = "insert into inquiry_data(Inquiry_Id,product_id,id)values(?,?,?)";
+
+		String query = "insert into inquiry_data(Inquiry_Id,product_id,id,Qty)values(?,?,?,?)";
 		try {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, inquiryId);
 			pstmt.setString(2, productNo);
 			pstmt.setString(3, cid);
+			pstmt.setString(4, Qty);
 			pstmt.execute();
 			System.out.println("Inquiry Added");
+			request.getRequestDispatcher("Cst_Inquiry.jsp").forward(request, response);
 		} catch (SQLException e) {
 
 			e.printStackTrace();
 		}
-		
 
 	}
 

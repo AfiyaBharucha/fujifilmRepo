@@ -46,6 +46,12 @@
 			window.location.reload()
 		}
 	};
+	
+	function clickAndDisable(link){
+		link.onclick=function(event){
+			event.preventDefault();
+		}
+	}
 </script>
 
 <!--[if lt IE 9]>
@@ -120,7 +126,7 @@
  	while (resultset.next()) {
  %>
 							<h4>
-								<a href="">#InquiryNo<%=resultset.getInt(1)%></a>
+								<a href="" onclick="clickAndDisable(this);">#InquiryNo<%=resultset.getInt(1)%></a>
 							</h4> <%
  	}
  %></td>
