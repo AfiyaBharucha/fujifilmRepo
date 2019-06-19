@@ -85,7 +85,7 @@ public class handlelogin extends HttpServlet {
 					if (isEmployee) {
 						response.sendRedirect("employee.jsp");
 					} else {
-						String cid = rs.getString(2);
+						int cid = rs.getInt(2);
 						session.setAttribute("cId", cid);
 						response.sendRedirect("customer.jsp");
 					}

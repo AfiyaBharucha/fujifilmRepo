@@ -44,54 +44,60 @@
 		}
 	};
 
-	function populateProductId() {
-		var selectBox = document.getElementById('selectbox');
+	function populateProductId(idx) {
+		var selectBox = document.getElementById('selectbox[' + idx + ']');
 		var selectedProductId = selectBox.options[selectBox.selectedIndex].value;
-		document.getElementById('productId').value = selectedProductId;
+		document.getElementById('pno[' + idx + ']').value = selectedProductId;
+
 	}
-
-	// 	function populateProduct() {
-	// 		var selectBox = document.getElementById('select');
-	// 		var selectedProductId = selectBox.options[selectBox.selectedIndex].value;
-	// 		document.getElementById('pId').value = selectedProductId;
-
-	// 	}
 
 	function addRow(tableID) {
 
 		var table = document.getElementById(tableID);
 		var rowCount = table.rows.length;
-		var counts = rowCount - 1;
+		var index = rowCount - 8;
 		var row = table.insertRow(rowCount);
 
 		var cell1 = row.insertCell(0);
 		var sno = document.createElement("input");
-		sno.type = "text";
-		sno.id = "sNo[]";
+		sno.readOnly = true;
+		sno.type = "number";
+		sno.id = "sno[" + index + "]";
+		sno.name = "sno[" + index + "]";
+		sno.value = index + 1;
 		cell1.appendChild(sno);
 
 		var cell2 = row.insertCell(1);
 		var pname = document.createElement("select");
-		var elemen = document.getElementById("selectbox");
+		var elemen = document.getElementById("selectbox[0]");
 		var ele = document.createElement("option");
-
-		//pname.id = "s";
-		pname.id = "pName[]";
+		pname.id = "selectbox[" + index + "]";
+		pname.name = "selectbox[" + index + "]";
+		pname.onchange = function() {
+			populateProductId(index)
+		};
 		pname.innerHTML = pname.innerHTML + elemen.innerHTML;
 		cell2.appendChild(pname);
-
 		var cell3 = row.insertCell(2);
+
 		var pno = document.createElement("input");
-		pno.type = "text";
-		pno.id = "pNo[]";
-		//pno.id = "in";
+		pno.type = "number";
+		pno.id = "pno[" + index + "]";
+		pno.name = "pno[" + index + "]";
+		pno.readOnly = true;
 		cell3.appendChild(pno);
+		cell3.disabled = true;
 
 		var cell4 = row.insertCell(3);
+
 		var Qty = document.createElement("input");
-		Qty.type = "text";
-		Qty.id = "qty[]";
+		Qty.type = "number";
+		Qty.id = "qty[" + index + "]";
+		Qty.name = "qty[" + index + "]";
 		cell4.appendChild(Qty);
+
+		var numrows = document.getElementById("numrows");
+		numrows.value = parseInt(numrows.value) + 1;
 	}
 </script>
 
@@ -109,6 +115,7 @@
 		clicks = rand.nextInt(90000) + 10000;
 		session.getAttribute("cId");
 		session.setAttribute("clicks", clicks);
+		session.setAttribute("date", new java.util.Date().toLocaleString());
 	%>
 	<%
 		try {
@@ -189,18 +196,18 @@
 					<tr>
 						<td><b>S.No:</b></td>
 
-						<td><b>product Name:</b></td>
+						<td><b>Product Name:</b></td>
 						<td><b>Product No:</b></td>
 						<td><b>Quantity:</b></td>
 
 					</tr>
 
 					<tr>
-						<td><input type="number" name="sno[0]" value="sno"
+						<td><input type="number" name="sno[0]" id="sno[0]" value="1" readonly="readonly"
 							required="required"></td>
 
-						<td><select id="selectbox" onchange="populateProductId();"
-							name="pname">
+						<td><select id="selectbox[0]"
+							onchange="populateProductId(0);" name="selectbox[0]">
 								<option>---- Select Product ----</option>
 								<%
 									while (resultset.next()) {
@@ -216,8 +223,8 @@
  	}
  %></td>
 						<td><input type="number" required="required" name="pno[0]"
-							id="productId" value="" disabled="disabled"></td>
-						<td><input type="text" name="qty"></td>
+							id="pno[0]" value="" disabled="disabled"></td>
+						<td><input type="number" name="qty[0]" id="qty[0]"></td>
 						<td><input type="button" value="Add" name="add" id="add"
 							onclick="addRow('dataTable');"></td>
 					<tr>
@@ -225,7 +232,8 @@
 					</tr>
 
 				</table>
-
+				<input type="number" id="numrows" name="numrows" value=1
+					hidden="true">
 				<div align="center">
 					<button class="site-btn">
 						<b> Submit </b>
