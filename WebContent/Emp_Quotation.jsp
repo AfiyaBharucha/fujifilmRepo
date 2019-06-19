@@ -62,19 +62,7 @@
 </head>
 <body>
 
-	<%
-		request.getAttribute("inquiryId");
-		request.getAttribute("productNo");
-		request.getAttribute("cid");
-		request.getAttribute("Qty");
-
-		ResultSet resultset;
-		PreparedStatement pstmt;
-		Connection conn = ConnectionManager.getCustConnection();
-		Statement statement = conn.createStatement();
-		resultset = statement.executeQuery("select  DISTINCT Inquiry_Id from inquiry_data ");
-	%>
-
+	
 	<%
 		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
 	%>
@@ -107,32 +95,9 @@
 	<!-- Register section -->
 	<section class="contact-section" style="width: 100%">
 		<div class="container" style="width: 100%">
-			<form action="HandleInquiry" method="post"
-				style="border: 2px solid red" id="f">
-
-				<table class="table" id="dataTable">
-
-					<tr align="center" bgcolor="Black">
-						<td align="center"><h3>
-								<font color="white">Customer Inquiries</font>
-							</h3></td>
-					</tr>
-					<tr align="center">
-						<td>These are the Inquiries you got from Customer.</td>
-					</tr>
-
-					<tr>
-						<td><br /> <%
- 	while (resultset.next()) {
- %>
-							<h4>
-								<a href="Emp_Quotation.jsp" ">#InquiryNo<%=resultset.getInt(1)%></a>
-							</h4> <%
- 	}
- %></td>
-					</tr>
-				</table>
-			</form>
+		
+		<h1>Quotation Form here</h1>
+	
 		</div>
 
 	</section>
