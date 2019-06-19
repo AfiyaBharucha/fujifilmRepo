@@ -2,6 +2,9 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Enumeration;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,28 +21,47 @@ public class HandleInquiry extends HttpServlet {
 			throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
-		int inquiryId = (Integer) session.getAttribute("clicks");
-		String productNo = request.getParameter("pname");
-		String cid = (String) session.getAttribute("cId");
-		String Qty = request.getParameter("qty");
-		Connection conn = ConnectionManager.getCustConnection();
-		PreparedStatement pstmt = null;
+		Enumeration<String> params = request.getParameterNames();
+		while (params.hasMoreElements()) {
+			String paramName = params.nextElement();
+			System.out.println("Parameter Name - " + paramName + ", Value - " + request.getParameter(paramName));
 
-		String query = "insert into inquiry_data(Inquiry_Id,product_id,id,Qty)values(?,?,?,?)";
-		try {
-			pstmt = conn.prepareStatement(query);
-			pstmt.setInt(1, inquiryId);
-			pstmt.setString(2, productNo);
-			pstmt.setString(3, cid);
-			pstmt.setString(4, Qty);
-			pstmt.execute();
-			System.out.println("Inquiry Added");
-			request.getRequestDispatcher("Cst_Inquiry.jsp").forward(request, response);
-		} catch (SQLException e) {
-
-			e.printStackTrace();
 		}
 
+		int numrows = Integer.parseInt(request.getParameter("numrows"));
+		for (int i = 0; i < numrows; i++) {
+
+			int inquiryId = (Integer) session.getAttribute("clicks");
+			int productId = Integer.parseInt(request.getParameter("selectbox[" + i + "]"));
+			int cid = (Integer) session.getAttribute("cId");
+			int qty = Integer.parseInt(request.getParameter("qty[" + i + "]"));
+			String date = (String) session.getAttribute("date");
+			Connection conn = null;
+			try {
+				conn = ConnectionManager.getCustConnection();
+				System.out.println(conn);
+				PreparedStatement preparedStmt = null;
+				String qry = "insert into inquiry_data(Inquiry_Id,product_id,id,Qty,date)values(?,? ,?,?,?)";
+				preparedStmt = conn.prepareStatement(qry);
+				preparedStmt.setInt(1, inquiryId);
+				preparedStmt.setInt(2, productId);
+				preparedStmt.setInt(3, cid);
+				preparedStmt.setInt(4, qty);
+				preparedStmt.setString(5, date);
+				preparedStmt.execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (conn != null) {
+					try {
+						conn.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		response.sendRedirect("Cst_Inquiry.jsp");
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)

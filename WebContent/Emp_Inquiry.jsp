@@ -72,7 +72,7 @@
 		PreparedStatement pstmt;
 		Connection conn = ConnectionManager.getCustConnection();
 		Statement statement = conn.createStatement();
-		resultset = statement.executeQuery("select * from inquiry_data");
+		resultset = statement.executeQuery("select  DISTINCT Inquiry_Id from inquiry_data ");
 	%>
 
 	<%
@@ -126,7 +126,7 @@
  	while (resultset.next()) {
  %>
 							<h4>
-								<a href="" onclick="clickAndDisable(this);">#InquiryNo<%=resultset.getInt(1)%></a>
+								<a href="" ">#InquiryNo<%=resultset.getInt(1)%></a>
 							</h4> <%
  	}
  %></td>
