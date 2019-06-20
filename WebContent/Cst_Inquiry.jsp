@@ -119,12 +119,21 @@
 	%>
 	<%
 		try {
-
+			//product info
 			ResultSet resultset;
-			PreparedStatement pstmt;
 			Connection conn = ConnectionManager.getCustConnection();
 			Statement statement = conn.createStatement();
 			resultset = statement.executeQuery("select product_id,product_name from product_master");
+
+			//customer info
+
+			ResultSet rs;
+			PreparedStatement pstmt;
+			String q = "select * from customer where id=?";
+			pstmt = conn.prepareStatement(q);
+			int id = (Integer) session.getAttribute("cId");
+			pstmt.setInt(1, id);
+			rs = pstmt.executeQuery();
 	%>
 	<%
 		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
@@ -167,32 +176,43 @@
 								<font color="white">Inquiry Form</font>
 							</h3></td>
 					</tr>
+					<%
+						while (rs.next()) {
+					%>
 					<tr>
 
+
 						<td><b>First name :</b></td>
-						<td><input type="text" name="Username" required="required" /></td>
+						<td><input type="text" name="Username" required="required"
+							value="<%=rs.getString("first_name")%>" /></td>
 
 						<td><b>Date: <%=(new java.util.Date()).toLocaleString()%>
 						</b></td>
 					</tr>
 					<tr>
 						<td><b>Last Name :</b></td>
-						<td><input type="text" name="lastName" required="required" /></td>
+						<td><input type="text" name="lastName" required="required"
+							value="<%=rs.getString("last_name")%>" /></td>
 						<td><b>Inquiry No: #INO<%=clicks%></b></td>
 					</tr>
 					<tr>
 						<td><b>Address :</b></td>
-						<td><input type="text" name="address" required="required" /></td>
+						<td><input type="text" name="address" required="required"
+							value="<%=rs.getString("address")%>" /></td>
 					</tr>
 					<tr>
 						<td><b>Mobile No :</b></td>
-						<td><input type="text" name="mobile" required="required" /></td>
+						<td><input type="number" name="mobile" required="required"
+							maxlength="10" value="<%=rs.getString("contact")%>" /></td>
 					</tr>
 					<tr>
 						<td><b>Email id :</b></td>
-						<td><input type="email" name="email" required="required" /></td>
+						<td><input type="email" name="email" required="required"
+							value="<%=rs.getString("emailid")%>" /></td>
 					</tr>
-
+					<%
+						}
+					%>
 					<tr>
 						<td><b>S.No:</b></td>
 
@@ -203,8 +223,8 @@
 					</tr>
 
 					<tr>
-						<td><input type="number" name="sno[0]" id="sno[0]" value="1" readonly="readonly"
-							required="required"></td>
+						<td><input type="number" name="sno[0]" id="sno[0]" value="1"
+							readonly="readonly" required="required"></td>
 
 						<td><select id="selectbox[0]"
 							onchange="populateProductId(0);" name="selectbox[0]">
