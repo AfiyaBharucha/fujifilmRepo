@@ -25,7 +25,6 @@ public class HandleInquiry extends HttpServlet {
 		while (params.hasMoreElements()) {
 			String paramName = params.nextElement();
 			System.out.println("Parameter Name - " + paramName + ", Value - " + request.getParameter(paramName));
-
 		}
 
 		int numrows = Integer.parseInt(request.getParameter("numrows"));
@@ -41,13 +40,14 @@ public class HandleInquiry extends HttpServlet {
 				conn = ConnectionManager.getCustConnection();
 				System.out.println(conn);
 				PreparedStatement preparedStmt = null;
-				String qry = "insert into inquiry_data(Inquiry_Id,product_id,id,Qty,date)values(?,? ,?,?,?)";
+				String qry = "insert into inquiry_data(Inquiry_Id,product_id,id,Qty,date,Status)values(?,? ,?,?,?,?)";
 				preparedStmt = conn.prepareStatement(qry);
 				preparedStmt.setInt(1, inquiryId);
 				preparedStmt.setInt(2, productId);
 				preparedStmt.setInt(3, cid);
 				preparedStmt.setInt(4, qty);
 				preparedStmt.setString(5, date);
+				preparedStmt.setString(6, "pending");
 				preparedStmt.execute();
 			} catch (Exception e) {
 				e.printStackTrace();

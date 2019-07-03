@@ -46,9 +46,9 @@
 			window.location.reload()
 		}
 	};
-	
-	function clickAndDisable(link){
-		link.onclick=function(event){
+
+	function clickAndDisable(link) {
+		link.onclick = function(event) {
 			event.preventDefault();
 		}
 	}
@@ -72,7 +72,8 @@
 		PreparedStatement pstmt;
 		Connection conn = ConnectionManager.getCustConnection();
 		Statement statement = conn.createStatement();
-		resultset = statement.executeQuery("select  DISTINCT Inquiry_Id from inquiry_data ");
+		resultset = statement
+				.executeQuery("select  DISTINCT Inquiry_Id,date from inquiry_data where Status='pending' ");
 	%>
 
 	<%
@@ -106,7 +107,7 @@
 
 	<!-- Register section -->
 	<section class="contact-section" style="width: 100%">
-		<div class="container" style="width: 100%">
+		<div class="container" style="width: 50%">
 			<form action="HandleInquiry" method="post"
 				style="border: 2px solid red" id="f">
 
@@ -116,6 +117,7 @@
 						<td align="center"><h3>
 								<font color="white">Customer Inquiries</font>
 							</h3></td>
+
 					</tr>
 					<tr align="center">
 						<td>These are the Inquiries you got from Customer.</td>
@@ -123,13 +125,28 @@
 
 					<tr>
 						<td><br /> <%
- 	while (resultset.next()) {
- %>
-							<h4>
-								<a href="Emp_Quotation.jsp" ">#InquiryNo<%=resultset.getInt(1)%></a>
-							</h4> <%
- 	}
- %></td>
+						
+						if(resultset.next()==false){
+							%><h1 align="center">No Inquiries</h1> <%}else{
+						
+						do{ int id = resultset.getInt("Inquiry_Id"); int i =
+							resultset.getInt(1); session.setAttribute("Id", id); %>
+							
+							<h4 align="center">
+								&nbsp &nbsp &nbsp &nbsp<a
+									href="Emp_Quotation.jsp?InquiryNo=<%=resultset.getInt("Inquiry_Id")%>">#INO<%=resultset.getInt(1)%></a>
+								&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp<b><%=resultset.getString("date")%></b>
+
+
+								<%
+									}while (resultset.next()) ;
+							}
+								%>
+
+
+							</h4></td>
+
+
 					</tr>
 				</table>
 			</form>

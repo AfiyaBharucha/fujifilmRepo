@@ -30,8 +30,8 @@
 								}
 								if (who != null && who.length() > 0) {
 							%>
-							<a href="logout.jsp" style="color: red;">Sign Out</a>
-							<%=who%>
+							<a href="logout.jsp" style="color: red;">Sign Out, <%=who%></a>
+							
 							<%
 								} else {
 							%>
@@ -41,26 +41,21 @@
 								}
 							%>
 						</div>
-						<div class="up-item">
-							<div class="shopping-card">
-								<i class="flaticon-bag"></i> <span>0</span>
-							</div>
-							<a href="#">Shopping Cart</a>
-						</div>
+						
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<nav class="main-navbar">
-		<div class="container">
+		<div class="container" align="center">
 			<!-- menu -->
-			<ul class="main-menu">
-				<li><a href="Emp_Inquiry.jsp">Inquiry</a></li>
-				<li><a href="blog.jsp">Quotation</a></li>
-				<li><a href="about.jsp">Sales Order</a></li>
+			<ul class="main-menu" >
+				<li ><a href="Emp_Inquiry.jsp">Inquiry</a></li>
+				<li><a href="SalesOrder.jsp">Sales Order</a></li>
 				<li><a href="contact.jsp">Delivery Order</a></li>
 				<li><a href="contact.jsp">Goods Issue</a></li>
+				<li><a href="Emp_Reports.jsp">Reports</a></li>
 			</ul>
 		</div>
 	</nav>

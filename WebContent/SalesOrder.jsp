@@ -1,3 +1,6 @@
+
+<%@page import="java.sql.ResultSetMetaData"%>
+<%@page import="com.mysql.cj.exceptions.RSAException"%>
 <%@page import="java.sql.Connection"%>
 <%@ page import="java.util.*"%>
 <%@page import="java.sql.ResultSet"%>
@@ -38,21 +41,11 @@
 
 
 <script>
-	function valueChange() {
-		var p = document.getElementById("price").value;
-		var q = document.getElementById("qty").value;
-		document.getElementById("tprice").value = p * q;
-	}
-
-	function hide() {
-		var x = document.getElementById("f");
-		if (x.style.display === "none") {
-			x.style.display = "block";
-		} else {
-			x.style.display = "none";
-
+	window.onpageshow = function(event) {
+		if (event.persisted) {
+			window.location.reload()
 		}
-	}
+	};
 </script>
 
 <!--[if lt IE 9]>
@@ -64,43 +57,14 @@
 <body>
 
 	<%
-		int clicks;
-		Random rand = new Random();
-		clicks = rand.nextInt(90000) + 10000;
-		session.getAttribute("cId");
-		session.setAttribute("clicks", clicks);
-		session.setAttribute("date", new java.util.Date().toLocaleString());
-	%>
-	<%
-		Connection conn = ConnectionManager.getCustConnection();
-		//for inquiry product
 		ResultSet resultset;
-		PreparedStatement pstmt = null;
-		String Query = "SELECT * FROM Inquiry_Data WHERE Inquiry_Id IN (SELECT Inquiry_Id FROM Inquiry_Data where Inquiry_Id=? order by date)";
-		pstmt = conn.prepareStatement(Query);
-		int id = Integer.parseInt(request.getParameter("InquiryNo"));
-		session.setAttribute("Ino", Integer.parseInt(request.getParameter("InquiryNo")));
-		pstmt.setInt(1, id);
-		resultset = pstmt.executeQuery();
-
-		//for customer info
-
-		ResultSet c;
-		PreparedStatement cust;
-		String info = "select * from customer where id IN(select id from Inquiry_Data where Inquiry_Id=?)";
-		cust = conn.prepareStatement(info);
-		cust.setInt(1, id);
-		c = cust.executeQuery();
-
-		//product info
-
-		ResultSet r;
-		PreparedStatement pr;
-		String Q = "SELECT * FROM product_master where product_id IN(SELECT product_id FROM Inquiry_Data WHERE  Inquiry_Id=?) ";
-		pr = conn.prepareStatement(Q);
-		pr.setInt(1, id);
-		r = pr.executeQuery();
+		PreparedStatement pstmt;
+		Connection conn = ConnectionManager.getCustConnection();
+		Statement statement = conn.createStatement();
+		resultset = statement
+				.executeQuery("select  DISTINCT Order_No from fujifilm.order where Order_Status='pending' ");
 	%>
+
 	<%
 		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
 	%>
@@ -115,13 +79,14 @@
 	<!-- Page info -->
 	<div class="page-top-info">
 		<div class="container">
+
 			<h4>
 				Employee(<%=session.getAttribute("who")%>)<br />
 
 			</h4>
 			<div class="site-pagination">
-				<a href="EmployeeView.jsp">Employee</a> / <a href="Emp_Quotation.jsp">Quotation
-				</a><br />
+				<a href="EmployeeView.jsp">Employee</a> / <a href="SalesOrder.jsp">Sales
+					Order</a><br />
 
 			</div>
 
@@ -132,107 +97,41 @@
 
 	<!-- Register section -->
 	<section class="contact-section" style="width: 100%">
-		<div class="container" style="width: 100%">
-			<form action="HandleQuotation" method="post"
-				id="f" name="f">
+		<div class="container" style="width: 50%">
+			<form action="HandleSale" method="post" style="border: 2px solid red"
+				id="f">
 
-				<table class="table" id="dataTable" onload="getValue('dataTable')">
+				<table class="table" id="dataTable">
 
 					<tr align="center" bgcolor="Black">
-						<td colspan="7"><h3>
-								<font color="white">Quotation</font>
+						<td align="center"><h3>
+								<font color="white">Sales Orders</font>
 							</h3></td>
 					</tr>
-					<%
-						while (c.next()) {
-					%>
-					<tr>
-
-						<td><b>First name :</b></td>
-						<td><input type="text" name="Username" required="required"
-							value="<%=c.getString("first_name")%>" /></td>
-
-						<td colspan="2"><b>Date: <%=(new java.util.Date()).toLocaleString()%>
-						</b></td>
+					<tr align="center">
+						<td>These are the Orders you got from Customer.</td>
 					</tr>
-
-					<tr >
-
-						<td><b>Last Name :</b></td>
-						<td><input type="text" name="lastName" required="required"
-							value="<%=c.getString("last_name")%>" /></td>
-						<td colspan="2"><b> Quotation No: #QUO<%=request.getParameter("InquiryNo")%></b>
-						</td>
-
-					</tr>
-					<tr>
-						<td><b>Address :</b></td>
-						<td><input type="text" name="address" required="required"
-							value="<%=c.getString("address")%>" /></td>
-					</tr>
-					<tr>
-						<td><b>Mobile No :</b></td>
-						<td><input type="text" name="mobile" required="required"
-							value="<%=c.getString("contact")%>" /></td>
-					</tr>
-					<tr>
-						<td><b>Email id :</b></td>
-						<td><input type="email" name="email" required="required"
-							value="<%=c.getString("emailid")%>" /></td>
-					</tr>
-					<%
-						}
-					%>
 
 					<tr>
-						<td><b>S.No:</b></td>
-						<td><b>product Name:</b></td>
-						<td><b>Product No:</b></td>
-						<td><b>Quantity:</b></td>
-						<td><b> Unit Price :</b></td>
-						<td><b> Total Price :</b></td>
+						<td><br /> <%if(resultset.next()==false){%>
+							<h1 align="center">No Orders</h1>
+							<% }else{
+							
+ 	do {
+ 		int id = resultset.getInt("Order_No");
+ 		session.setAttribute("Id", id);
+ %>
 
+
+							<h4 align="center">
+								<a href="Orders.jsp?OrderNo=<%=resultset.getInt("Order_No")%>">#OrderNo<%=resultset.getInt("Order_No")%>
+								</a>
+							</h4> <%
+ 	}while (resultset.next());
+ 	}%></td>
 					</tr>
-
-					<%
-						while (resultset.next() && r.next()) {
-					%>
-					<tr>
-						<td><input type="number" name="sno[0]" id="sno[0]"
-							value="<%=resultset.getRow()%>" readonly="readonly"
-							required="required" size="5"></td>
-						<td><input type="text" name="pname[0]"
-							value="<%=r.getString("product_name")%>"></td>
-
-						<td><input type="number" required="required" name="pno[0]"
-							id="pno" value="<%=r.getInt("product_id")%>"></td>
-
-						<td><input type="number" name="qty[0]" id="qty"
-							value="<%=resultset.getInt("Qty")%>"
-							onchange="valueChange();" size="8"></td>
-
-						<td><input type=number name="price[0]" id="price"
-							value="<%=r.getInt("price")%>" readonly="readonly" size="8"></td>
-
-						<td><input type=text name="Tprice[0]" id="tprice"
-							readonly="readonly"
-							value="<%=(r.getInt("price")) * (resultset.getInt("Qty"))%>"
-							size="8"></td>
-						<%
-							}
-						%>
-					</tr>
-
 				</table>
-
-				<div align="center">
-					<button class="site-btn" id="order">
-						<b> Send Quotation </b>
-					</button>
-				</div>
-				<br />
 			</form>
-
 		</div>
 
 	</section>

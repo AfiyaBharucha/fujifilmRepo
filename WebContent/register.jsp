@@ -81,7 +81,7 @@ httpResponse.setDateHeader("Expires", 0);
 
 	<!-- Register section -->
 	<section class="contact-section" style="width: 100%">
-		<div class="container" style="width: 100%">
+		<div class="container" style="width: 100%" align="center">
 			<h4>Please use this form to register yourself. If you're
 				registering as an employee then please provide your employee id.</h4>
 			<br />

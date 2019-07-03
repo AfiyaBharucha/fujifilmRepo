@@ -73,13 +73,13 @@
 	%>
 	<%
 		Connection conn = ConnectionManager.getCustConnection();
-		//for inquiry product
+		//for ordered product
 		ResultSet resultset;
 		PreparedStatement pstmt = null;
-		String Query = "SELECT * FROM Inquiry_Data WHERE Inquiry_Id IN (SELECT Inquiry_Id FROM Inquiry_Data where Inquiry_Id=? order by date)";
+		String Query = "SELECT * FROM fujifilm.order WHERE product_id IN (SELECT product_id FROM fujifilm.order where Order_No=?) ";
 		pstmt = conn.prepareStatement(Query);
-		int id = Integer.parseInt(request.getParameter("InquiryNo"));
-		session.setAttribute("Ino", Integer.parseInt(request.getParameter("InquiryNo")));
+		int id = Integer.parseInt(request.getParameter("OrderNo"));
+		session.setAttribute("Ono", Integer.parseInt(request.getParameter("OrderNo")));
 		pstmt.setInt(1, id);
 		resultset = pstmt.executeQuery();
 
@@ -87,7 +87,7 @@
 
 		ResultSet c;
 		PreparedStatement cust;
-		String info = "select * from customer where id IN(select id from Inquiry_Data where Inquiry_Id=?)";
+		String info = "select * from customer where id IN(select id from fujifilm.order where Order_No=?)";
 		cust = conn.prepareStatement(info);
 		cust.setInt(1, id);
 		c = cust.executeQuery();
@@ -96,7 +96,7 @@
 
 		ResultSet r;
 		PreparedStatement pr;
-		String Q = "SELECT * FROM product_master where product_id IN(SELECT product_id FROM Inquiry_Data WHERE  Inquiry_Id=?) ";
+		String Q = "SELECT * FROM product_master where product_id IN(SELECT product_id FROM fujifilm.order WHERE  Order_No=?) ";
 		pr = conn.prepareStatement(Q);
 		pr.setInt(1, id);
 		r = pr.executeQuery();
@@ -120,8 +120,8 @@
 
 			</h4>
 			<div class="site-pagination">
-				<a href="EmployeeView.jsp">Employee</a> / <a href="Emp_Quotation.jsp">Quotation
-				</a><br />
+				<a href="EmployeeView.jsp">Employee</a> / <a href="SalesOrder.jsp">Sale
+					Order</a><br />
 
 			</div>
 
@@ -133,14 +133,14 @@
 	<!-- Register section -->
 	<section class="contact-section" style="width: 100%">
 		<div class="container" style="width: 100%">
-			<form action="HandleQuotation" method="post"
+			<form action="HandleSale" method="post" 
 				id="f" name="f">
 
 				<table class="table" id="dataTable" onload="getValue('dataTable')">
 
 					<tr align="center" bgcolor="Black">
 						<td colspan="7"><h3>
-								<font color="white">Quotation</font>
+								<font color="white">Sale Order</font>
 							</h3></td>
 					</tr>
 					<%
@@ -152,16 +152,16 @@
 						<td><input type="text" name="Username" required="required"
 							value="<%=c.getString("first_name")%>" /></td>
 
-						<td colspan="2"><b>Date: <%=(new java.util.Date()).toLocaleString()%>
+						<td colspan="2"><b style="color: #CD5C5C">Date:</b><b> <%=(new java.util.Date()).toLocaleString()%>
 						</b></td>
 					</tr>
 
-					<tr >
+					<tr>
 
 						<td><b>Last Name :</b></td>
 						<td><input type="text" name="lastName" required="required"
 							value="<%=c.getString("last_name")%>" /></td>
-						<td colspan="2"><b> Quotation No: #QUO<%=request.getParameter("InquiryNo")%></b>
+						<td><b style="color: #CD5C5C"> Order No:</b><b> #PON<%=request.getParameter("OrderNo")%></b>
 						</td>
 
 					</tr>
@@ -185,12 +185,12 @@
 					%>
 
 					<tr>
-						<td><b>S.No:</b></td>
-						<td><b>product Name:</b></td>
-						<td><b>Product No:</b></td>
-						<td><b>Quantity:</b></td>
-						<td><b> Unit Price :</b></td>
-						<td><b> Total Price :</b></td>
+						<td><b style="color: #CD5C5C">S.No:</b></td>
+						<td><b style="color: #CD5C5C">product Name:</b></td>
+						<td><b style="color: #CD5C5C">Product No:</b></td>
+						<td><b style="color: #CD5C5C">Quantity:</b></td>
+						<td><b style="color: #CD5C5C"> Unit Price :</b></td>
+						<td><b style="color: #CD5C5C"> Total Price :</b></td>
 
 					</tr>
 
@@ -202,21 +202,20 @@
 							value="<%=resultset.getRow()%>" readonly="readonly"
 							required="required" size="5"></td>
 						<td><input type="text" name="pname[0]"
-							value="<%=r.getString("product_name")%>"></td>
+							value="<%=r.getString("product_name")%>" readonly="readonly"></td>
 
 						<td><input type="number" required="required" name="pno[0]"
-							id="pno" value="<%=r.getInt("product_id")%>"></td>
+							id="pno" value="<%=r.getInt("product_id")%>" readonly="readonly"></td>
 
 						<td><input type="number" name="qty[0]" id="qty"
-							value="<%=resultset.getInt("Qty")%>"
-							onchange="valueChange();" size="8"></td>
+							value="<%=resultset.getInt("Qty_Sold")%>" size="8" readonly="readonly"></td>
 
 						<td><input type=number name="price[0]" id="price"
-							value="<%=r.getInt("price")%>" readonly="readonly" size="8"></td>
+							value="<%=r.getInt("price")%>"  size="8"></td>
 
 						<td><input type=text name="Tprice[0]" id="tprice"
-							readonly="readonly"
-							value="<%=(r.getInt("price")) * (resultset.getInt("Qty"))%>"
+							
+							value="<%=(r.getInt("price")) * (resultset.getInt("Qty_Sold"))%>"
 							size="8"></td>
 						<%
 							}
@@ -227,7 +226,7 @@
 
 				<div align="center">
 					<button class="site-btn" id="order">
-						<b> Send Quotation </b>
+						<b> Confirm Order </b>
 					</button>
 				</div>
 				<br />

@@ -68,7 +68,7 @@
 
 	<!-- Login section -->
 	<section class="contact-section" style="width: 100%">
-		<div class="container" style="width: 100%">
+		<div class="container" style="width: 100%" align="center">
 			<h4>Please enter your employee id if you're an employee. If you're a customer please leave the employee id field blank.</h4>
 			<br />
 			<form action="handlelogin" method="post">

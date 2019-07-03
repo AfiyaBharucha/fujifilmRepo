@@ -94,6 +94,7 @@
 		Qty.type = "number";
 		Qty.id = "qty[" + index + "]";
 		Qty.name = "qty[" + index + "]";
+		Qty.value = 1;
 		cell4.appendChild(Qty);
 
 		var numrows = document.getElementById("numrows");
@@ -186,14 +187,14 @@
 						<td><input type="text" name="Username" required="required"
 							value="<%=rs.getString("first_name")%>" /></td>
 
-						<td><b>Date: <%=(new java.util.Date()).toLocaleString()%>
+						<td><b style="color: #CD5C5C">Date: </b><b><%=(new java.util.Date()).toLocaleString()%>
 						</b></td>
 					</tr>
 					<tr>
 						<td><b>Last Name :</b></td>
 						<td><input type="text" name="lastName" required="required"
 							value="<%=rs.getString("last_name")%>" /></td>
-						<td><b>Inquiry No: #INO<%=clicks%></b></td>
+						<td><b style="color: #CD5C5C">Inquiry No:</b><b> #INO<%=clicks%></b></td>
 					</tr>
 					<tr>
 						<td><b>Address :</b></td>
@@ -214,11 +215,11 @@
 						}
 					%>
 					<tr>
-						<td><b>S.No:</b></td>
+						<td><b style="color: #CD5C5C">S.No:</b></td>
 
-						<td><b>Product Name:</b></td>
-						<td><b>Product No:</b></td>
-						<td><b>Quantity:</b></td>
+						<td><b style="color: #CD5C5C">Product Name:</b></td>
+						<td><b style="color: #CD5C5C">Product No:</b></td>
+						<td><b style="color: #CD5C5C">Quantity:</b></td>
 
 					</tr>
 
@@ -244,7 +245,7 @@
  %></td>
 						<td><input type="number" required="required" name="pno[0]"
 							id="pno[0]" value="" disabled="disabled"></td>
-						<td><input type="number" name="qty[0]" id="qty[0]"></td>
+						<td><input type="number" name="qty[0]" id="qty[0]" value="1"></td>
 						<td><input type="button" value="Add" name="add" id="add"
 							onclick="addRow('dataTable');"></td>
 					<tr>
@@ -255,7 +256,7 @@
 				<input type="number" id="numrows" name="numrows" value=1
 					hidden="true">
 				<div align="center">
-					<button class="site-btn">
+					<button class="site-btn" onclick="alert('Your Inquiry has been submited.');">
 						<b> Submit </b>
 					</button>
 				</div>

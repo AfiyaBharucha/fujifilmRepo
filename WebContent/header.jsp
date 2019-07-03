@@ -41,20 +41,14 @@
 								     } 
 								  %>
 							</div>
-							<div class="up-item">
-								<div class="shopping-card">
-									<i class="flaticon-bag"></i>
-									<span>0</span>
-								</div>
-								<a href="#">Shopping Cart</a>
-							</div>
+							
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<nav class="main-navbar">
-			<div class="container">
+			<div class="container" align="center">
 				<!-- menu -->
 				<ul class="main-menu">
 					<li><a href="index.jsp">Home</a></li>

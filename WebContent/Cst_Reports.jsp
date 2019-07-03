@@ -1,3 +1,6 @@
+
+<%@page import="java.sql.ResultSetMetaData"%>
+<%@page import="com.mysql.cj.exceptions.RSAException"%>
 <%@page import="java.sql.Connection"%>
 <%@ page import="java.util.*"%>
 <%@page import="java.sql.ResultSet"%>
@@ -38,21 +41,11 @@
 
 
 <script>
-	function valueChange() {
-		var p = document.getElementById("price").value;
-		var q = document.getElementById("qty").value;
-		document.getElementById("tprice").value = p * q;
-	}
-
-	function hide() {
-		var x = document.getElementById("f");
-		if (x.style.display === "none") {
-			x.style.display = "block";
-		} else {
-			x.style.display = "none";
-
+	window.onpageshow = function(event) {
+		if (event.persisted) {
+			window.location.reload()
 		}
-	}
+	};
 </script>
 
 <!--[if lt IE 9]>
@@ -64,43 +57,25 @@
 <body>
 
 	<%
-		int clicks;
-		Random rand = new Random();
-		clicks = rand.nextInt(90000) + 10000;
-		session.getAttribute("cId");
-		session.setAttribute("clicks", clicks);
-		session.setAttribute("date", new java.util.Date().toLocaleString());
-	%>
-	<%
-		Connection conn = ConnectionManager.getCustConnection();
-		//for inquiry product
 		ResultSet resultset;
 		PreparedStatement pstmt = null;
-		String Query = "SELECT * FROM Inquiry_Data WHERE Inquiry_Id IN (SELECT Inquiry_Id FROM Inquiry_Data where Inquiry_Id=? order by date)";
-		pstmt = conn.prepareStatement(Query);
-		int id = Integer.parseInt(request.getParameter("InquiryNo"));
-		session.setAttribute("Ino", Integer.parseInt(request.getParameter("InquiryNo")));
+
+		int id = (Integer) session.getAttribute("cId");
+		int No = (Integer) session.getAttribute("No");
+		Connection conn = ConnectionManager.getCustConnection();
+		String query = "select  * from inquiry_data where Status='canceled' and id=?";
+		pstmt = conn.prepareStatement(query);
 		pstmt.setInt(1, id);
 		resultset = pstmt.executeQuery();
 
-		//for customer info
-
-		ResultSet c;
-		PreparedStatement cust;
-		String info = "select * from customer where id IN(select id from Inquiry_Data where Inquiry_Id=?)";
-		cust = conn.prepareStatement(info);
-		cust.setInt(1, id);
-		c = cust.executeQuery();
-
-		//product info
-
-		ResultSet r;
-		PreparedStatement pr;
-		String Q = "SELECT * FROM product_master where product_id IN(SELECT product_id FROM Inquiry_Data WHERE  Inquiry_Id=?) ";
-		pr = conn.prepareStatement(Q);
-		pr.setInt(1, id);
-		r = pr.executeQuery();
+		ResultSet rs;
+		PreparedStatement p = null;
+		String q = "select  * from fujifilm.order where Order_Status='done' and id=?";
+		p = conn.prepareStatement(q);
+		p.setInt(1, id);
+		rs = p.executeQuery();
 	%>
+
 	<%
 		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
 	%>
@@ -110,18 +85,18 @@
 	</div>
 
 	<!-- Included header section -->
-	<jsp:include page="EmployeeView.jsp" />
+	<jsp:include page="CustomerView.jsp" />
 
 	<!-- Page info -->
 	<div class="page-top-info">
 		<div class="container">
+
 			<h4>
-				Employee(<%=session.getAttribute("who")%>)<br />
+				Customer(<%=session.getAttribute("who")%>)<br />
 
 			</h4>
 			<div class="site-pagination">
-				<a href="EmployeeView.jsp">Employee</a> / <a href="Emp_Quotation.jsp">Quotation
-				</a><br />
+				<a href="CustomerView">Customer</a> / <a href="Cst_Reports.jsp">Reports</a><br />
 
 			</div>
 
@@ -132,107 +107,78 @@
 
 	<!-- Register section -->
 	<section class="contact-section" style="width: 100%">
-		<div class="container" style="width: 100%">
-			<form action="HandleQuotation" method="post"
-				id="f" name="f">
+		<div class="container" style="width: 75%">
+			<form action="" method="post" style="border: 2px solid red" id="f">
 
-				<table class="table" id="dataTable" onload="getValue('dataTable')">
+				<table class="table" id="dataTable">
 
 					<tr align="center" bgcolor="Black">
-						<td colspan="7"><h3>
-								<font color="white">Quotation</font>
+						<td align="center" colspan="6"><h3>
+								<font color="white">Reports</font>
 							</h3></td>
 					</tr>
+
+					<tr align="center" bgcolor="pink">
+						<td align="center" colspan="6"><h3>Canceled Inquiries
+								</h3></td>
+					</tr>
+					<tr>
+						<td><b><h5>Inquiry Id</h5></b></td>
+						<td><b><h5>Customer Id</h5></b></td>
+						<td><b><h5>Product Id</h5></b></td>
+						<td><b><h5>Quantity</h5></b></td>
+						<td><b><h5>Date</b></h5></td>
+					</tr>
 					<%
-						while (c.next()) {
+						while (resultset.next()) {
 					%>
 					<tr>
 
-						<td><b>First name :</b></td>
-						<td><input type="text" name="Username" required="required"
-							value="<%=c.getString("first_name")%>" /></td>
+						<td><%=resultset.getInt("Inquiry_Id")%></td>
+						<td><%=resultset.getInt("id")%></td>
+						<td><%=resultset.getInt("product_id")%></td>
+						<td><%=resultset.getInt("Qty")%></td>
+						<td><%=resultset.getString("date")%></td>
 
-						<td colspan="2"><b>Date: <%=(new java.util.Date()).toLocaleString()%>
-						</b></td>
-					</tr>
-
-					<tr >
-
-						<td><b>Last Name :</b></td>
-						<td><input type="text" name="lastName" required="required"
-							value="<%=c.getString("last_name")%>" /></td>
-						<td colspan="2"><b> Quotation No: #QUO<%=request.getParameter("InquiryNo")%></b>
-						</td>
-
-					</tr>
-					<tr>
-						<td><b>Address :</b></td>
-						<td><input type="text" name="address" required="required"
-							value="<%=c.getString("address")%>" /></td>
-					</tr>
-					<tr>
-						<td><b>Mobile No :</b></td>
-						<td><input type="text" name="mobile" required="required"
-							value="<%=c.getString("contact")%>" /></td>
-					</tr>
-					<tr>
-						<td><b>Email id :</b></td>
-						<td><input type="email" name="email" required="required"
-							value="<%=c.getString("emailid")%>" /></td>
 					</tr>
 					<%
 						}
 					%>
 
-					<tr>
-						<td><b>S.No:</b></td>
-						<td><b>product Name:</b></td>
-						<td><b>Product No:</b></td>
-						<td><b>Quantity:</b></td>
-						<td><b> Unit Price :</b></td>
-						<td><b> Total Price :</b></td>
 
+
+
+					<tr align="center" bgcolor="#F8C471  ">
+						<td align="center" colspan="6"><h3>Purchased orders 
+								</h3></td>
 					</tr>
-
+					<tr>
+						<td><h5><b>Order No</b></h5></td>
+						<td><h5><b>Customer Id</b></h5></td>
+						<td><h5><b>Product Id</b></h5></td>
+						<td><h5><b>Quantity</b></h5></td>
+						<td><h5><b>Date</b></h5></td>
+					</tr>
 					<%
-						while (resultset.next() && r.next()) {
+						while (rs.next()) {
 					%>
 					<tr>
-						<td><input type="number" name="sno[0]" id="sno[0]"
-							value="<%=resultset.getRow()%>" readonly="readonly"
-							required="required" size="5"></td>
-						<td><input type="text" name="pname[0]"
-							value="<%=r.getString("product_name")%>"></td>
 
-						<td><input type="number" required="required" name="pno[0]"
-							id="pno" value="<%=r.getInt("product_id")%>"></td>
+						<td><%=rs.getInt("Order_No")%></td>
+						<td><%=rs.getInt("id")%></td>
+						<td><%=rs.getInt("product_id")%></td>
+						<td><%=rs.getInt("Qty_Sold")%></td>
+						<td><%=rs.getString("Order_Date")%></td>
 
-						<td><input type="number" name="qty[0]" id="qty"
-							value="<%=resultset.getInt("Qty")%>"
-							onchange="valueChange();" size="8"></td>
-
-						<td><input type=number name="price[0]" id="price"
-							value="<%=r.getInt("price")%>" readonly="readonly" size="8"></td>
-
-						<td><input type=text name="Tprice[0]" id="tprice"
-							readonly="readonly"
-							value="<%=(r.getInt("price")) * (resultset.getInt("Qty"))%>"
-							size="8"></td>
-						<%
-							}
-						%>
 					</tr>
+					<%
+						}
+					%>
+
+
 
 				</table>
-
-				<div align="center">
-					<button class="site-btn" id="order">
-						<b> Send Quotation </b>
-					</button>
-				</div>
-				<br />
 			</form>
-
 		</div>
 
 	</section>
