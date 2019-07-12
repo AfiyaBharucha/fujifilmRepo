@@ -1,3 +1,6 @@
+
+<%@page import="java.sql.ResultSetMetaData"%>
+<%@page import="com.mysql.cj.exceptions.RSAException"%>
 <%@page import="java.sql.Connection"%>
 <%@ page import="java.util.*"%>
 <%@page import="java.sql.ResultSet"%>
@@ -38,33 +41,9 @@
 
 
 <script>
-	function valueChange() {
-		var p = document.getElementById("price").value;
-		var q = document.getElementById("qty").value;
-		document.getElementById("tprice").value = p * q;
-	}
-
-	function hide() {
-		var x = document.getElementById("f");
-		if (x.style.display === "none") {
-			x.style.display = "block";
-		} else {
-			x.style.display = "none";
-
-		}
-	}
-
-	function Remove(img) {
-		//Determine the reference of the Row using the Button.
-		var row = img.parentNode.parentNode;
-		var name = row.getElementsByTagName("TD")[0].innerHTML;
-		if (confirm("Do you want to delete this row? ")) {
-
-			//Get the reference of the Table.
-			var table = document.getElementById("dataTable");
-
-			//Delete the Table row using it's Index.
-			table.deleteRow(row.rowIndex);
+	window.onpageshow = function(event) {
+		if (event.persisted) {
+			window.location.reload()
 		}
 	};
 </script>
@@ -78,59 +57,18 @@
 <body>
 
 	<%
-		int clicks;
-		Random rand = new Random();
-		clicks = rand.nextInt(90000) + 10000;
-		session.getAttribute("cId");
-		session.setAttribute("clicks", clicks);
-		session.setAttribute("date", new java.util.Date().toLocaleString());
-	%>
-	<%
-		Connection conn = ConnectionManager.getCustConnection();
-		//for inquiry product
-		ResultSet resultset;
-		PreparedStatement pstmt = null;
-		String Query = "SELECT * FROM fujifilm.order WHERE Order_No IN (SELECT Order_No FROM fujifilm.order WHERE  id=? and Order_Status='confirmed') ORDER BY Order_Date";
-		pstmt = conn.prepareStatement(Query);
 		int id = (Integer) session.getAttribute("cId");
-		pstmt.setInt(1, id);
-		resultset = pstmt.executeQuery();
+		int No = (Integer) session.getAttribute("No");
+		Connection conn = ConnectionManager.getCustConnection();
 
-		//for inquiry id
 		ResultSet rs;
 		PreparedStatement p = null;
-		String q = "SELECT * FROM fujifilm.order WHERE Order_No IN (SELECT Order_No FROM fujifilm.order where id=? and Order_Status='confirmed' ORDER BY Order_Date ) LIMIT 1";
+		String q = "select  * from fujifilm.order where Order_Status='done' and id=? and Order_Date< NOW() + interval 30 day";
 		p = conn.prepareStatement(q);
 		p.setInt(1, id);
 		rs = p.executeQuery();
-		while (rs.next()) {
-			rs.getInt("Order_No");
-
-			int ID = rs.getInt("Order_No");
-			session.setAttribute("No", ID);
-		}
-		//for customer info
-
-		ResultSet c;
-		PreparedStatement cust;
-		String info = "select * from customer where id=?";
-		cust = conn.prepareStatement(info);
-		cust.setInt(1, id);
-		c = cust.executeQuery();
-
-		//product info
-		if (session.getAttribute("No") == null) {
-			session.setAttribute("No", 0);
-		}
-		ResultSet r;
-		PreparedStatement pr;
-		String Q = "SELECT * FROM product_master where product_id IN(SELECT product_id FROM fujifilm.order WHERE Order_No in(select Order_No from fujifilm.order where id=? and Order_Status='confirmed' and Order_No=?)) ";
-		pr = conn.prepareStatement(Q);
-		pr.setInt(1, id);
-		int I = (Integer) session.getAttribute("No");
-		pr.setInt(2, I);
-		r = pr.executeQuery();
 	%>
+
 	<%
 		response.setHeader("Cache-Control", "no-cache,no-store,must-revalidate");
 	%>
@@ -145,12 +83,14 @@
 	<!-- Page info -->
 	<div class="page-top-info">
 		<div class="container">
+
 			<h4>
 				Customer(<%=session.getAttribute("who")%>)<br />
 
 			</h4>
 			<div class="site-pagination">
-				<a href="CustomerView.jsp">Customer</a> / <a href="Invoice.jsp">Invoice</a><br />
+				<a href="CustomerView.jsp">Customer</a> / <a href="MaterialReturn.jsp">Material
+					Return</a><br />
 
 			</div>
 
@@ -161,113 +101,61 @@
 
 	<!-- Register section -->
 	<section class="contact-section" style="width: 100%">
-		<div class="container" style="width: 100%">
+		<div class="container" style="width: 75%">
+			<form method="post" style="border: 2px solid red" id="f">
 
-			<form action="InvoiceStatus" method="post"
-				style="border: 2px solid red" id="f" name="f">
-
-				<table class="table" id="dataTable" onload="getValue('dataTable')">
+				<table class="table" id="dataTable">
 
 					<tr align="center" bgcolor="Black">
-						<td colspan="7"><h3>
-								<font color="white">Invoice</font>
+						<td align="center" colspan="6"><h3>
+								<font color="white">Return Your Purchased product Within
+									30 Days</font>
 							</h3></td>
 					</tr>
+
+					<tr align="center" bgcolor="#F8C471  ">
+						<td align="center" colspan="6"><h3>Purchased orders</h3></td>
+					</tr>
+					<tr>
+						<td><h5>
+								<b>Order No</b>
+							</h5></td>
+						<td><h5>
+								<b>Customer Id</b>
+							</h5></td>
+						<td><h5>
+								<b>Product Id</b>
+							</h5></td>
+						<td><h5>
+								<b>Quantity</b>
+							</h5></td>
+						<td><h5>
+								<b>Date</b>
+							</h5></td>
+					</tr>
 					<%
-						while (c.next()) {
+						while (rs.next()) {
 					%>
 					<tr>
 
-						<td><b>First name :</b></td>
-						<td><input type="text" name="Username" required="required"
-							value="<%=c.getString("first_name")%>" /></td>
+						<td><%=rs.getInt("Order_No")%></td>
+						<td><%=rs.getInt("id")%></td>
+						<td><%=rs.getInt("product_id")%></td>
+						<td><%=rs.getInt("Qty_Sold")%></td>
+						<td><%=rs.getString("Order_Date")%></td>
+						<td><h5>
+								<a href="ReturnMaterial?OrderNo=<%=rs.getInt("Order_No") %>&Qty=<%=rs.getInt("Qty_Sold")%>&Id=<%=rs.getInt("product_id")%>" onclick="if(!confirm('Are you sure you want to return this product?'))return false">return</a>
+							</h5></td>
 
-						<td colspan="2"><b style="color: #CD5C5C">Date:</b><b> <%=(new java.util.Date()).toLocaleString()%>
-						</b></td>
-					</tr>
-
-					<tr>
-
-						<td><b>Last Name :</b></td>
-						<td><input type="text" name="lastName" required="required"
-							value="<%=c.getString("last_name")%>" /></td>
-						<td><b style="color: #CD5C5C"> Invoice No:</b><b> #INV<%=session.getAttribute("No")%></b>
-
-						</td>
-
-					</tr>
-					<tr>
-						<td><b>Address :</b></td>
-						<td><input type="text" name="address" required="required"
-							value="<%=c.getString("address")%>" /></td>
-					</tr>
-					<tr>
-						<td><b>Mobile No :</b></td>
-						<td><input type="text" name="mobile" required="required"
-							value="<%=c.getString("contact")%>" /></td>
-					</tr>
-					<tr>
-						<td><b>Email id :</b></td>
-						<td><input type="email" name="email" required="required"
-							value="<%=c.getString("emailid")%>" /></td>
 					</tr>
 					<%
 						}
 					%>
 
-					<tr>
-						<td><b style="color: #CD5C5C">S.No:</b></td>
-						<td><b style="color: #CD5C5C">product Name:</b></td>
-						<td><b style="color: #CD5C5C">Product No:</b></td>
-						<td><b style="color: #CD5C5C">Quantity:</b></td>
-						<td><b style="color: #CD5C5C"> Unit Price :</b></td>
-						<td><b style="color: #CD5C5C"> Total Price :</b></td>
 
-					</tr>
-
-					<%
-						while (r.next() && resultset.next()) {
-					%>
-					<tr>
-						<td><input type="number" name="sno[0]" id="sno[0]"
-							value="<%=r.getRow()%>" readonly="readonly" required="required"
-							size="5"> <%
- 	int row = r.getRow();
- 		session.setAttribute("rows", row);
- %></td>
-						<td><input type="text" name="pname[0]"
-							value="<%=r.getString("product_name")%>" readonly="readonly"></td>
-
-						<td><input type="number" required="required" name="pno[0]"
-							id="pno" value="<%=r.getInt("product_id")%>" readonly="readonly"></td>
-
-						<td><input type="number" name="qty[0]" id="qty"
-							value="<%=resultset.getInt("Qty_Sold")%>" size="8"
-							readonly="readonly"></td>
-
-						<td><input type=number name="price[0]" id="price"
-							value="<%=r.getInt("price")%>" readonly="readonly" size="8"></td>
-
-						<td><input type=text name="Tprice[0]" id="tprice"
-							readonly="readonly"
-							value="<%=(r.getInt("price")) * (resultset.getInt("Qty_Sold"))%>"
-							size="8"></td>
-
-						<%
-							}
-						%>
-					</tr>
 
 				</table>
-
-				<div align="center">
-					<button class="site-btn">
-						<b> Continue Payment </b>
-					</button>
-				</div>
-				<br />
 			</form>
-
 		</div>
 
 	</section>

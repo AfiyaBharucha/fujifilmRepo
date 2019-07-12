@@ -56,6 +56,7 @@
 				<li><a href="Invoice.jsp">Invoice</a></li>
 				<li><a href="contact.jsp">Payment</a></li>
 				<li><a href="PayReceipt.jsp">Payment Receipt</a></li>
+				<li><a href="MaterialReturn.jsp">Material Return</a></li>
 				<li><a href="Cst_Reports.jsp">Reports</a></li>
 			</ul>
 		</div>

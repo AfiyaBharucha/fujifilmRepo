@@ -111,7 +111,9 @@
 		c = cust.executeQuery();
 
 		//product info
-
+if (session.getAttribute("No") == null) {
+			session.setAttribute("No", 0);
+		}
 		ResultSet r;
 		PreparedStatement pr;
 		int I = (Integer) session.getAttribute("No");

@@ -1,4 +1,3 @@
-
 <%@page import="java.sql.ResultSetMetaData"%>
 <%@page import="com.mysql.cj.exceptions.RSAException"%>
 <%@page import="java.sql.Connection"%>
@@ -22,7 +21,6 @@
 
 <!-- Favicon -->
 <link href="img/favicon.ico" rel="shortcut icon" />
-
 <!-- Google Font -->
 <link
 	href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,300i,400,400i,700,700i"
@@ -58,7 +56,6 @@
 
 	<%
 		ResultSet resultset;
-
 		Connection conn = ConnectionManager.getCustConnection();
 		Statement statement = conn.createStatement();
 		resultset = statement.executeQuery("select  * from inquiry_data ");
@@ -66,6 +63,22 @@
 		ResultSet rs;
 		Statement stmt = conn.createStatement();
 		rs = stmt.executeQuery("select  * from fujifilm.order where Order_Status='done'");
+
+		ResultSet ret;
+		Statement rstmt = conn.createStatement();
+		ret = rstmt.executeQuery("select  * from fujifilm.order where Order_Status='return'");
+
+		ResultSet res;
+		PreparedStatement pss = null;
+		String a = "select fujifilm.order.*,payment.* from fujifilm.order  JOIN payment ON fujifilm.order.Order_No=payment.Order_No where Order_Status='done'";
+		pss = conn.prepareStatement(a);
+		res = pss.executeQuery();
+
+		ResultSet r;
+		PreparedStatement p = null;
+		String Q = "select product_master.product_id,product_master.quantity,sum(case when Order_Status='done' then Qty_Sold else 0 end),sum(case when Order_Status='return' then Qty_Sold else 0 end)  from fujifilm.order right join product_master on fujifilm.order.product_id=product_master.product_id group by product_id order by product_id";
+		p = conn.prepareStatement(Q);
+		r = p.executeQuery();
 	%>
 
 	<%
@@ -108,19 +121,24 @@
 						<td align="center" colspan="6"><h3>
 								<font color="white">Reports</font>
 							</h3></td>
+
 					</tr>
 
 					<tr align="center" bgcolor="pink">
 						<td align="center" colspan="6"><h3>Inquiries Of
 								Customers:</h3></td>
 					</tr>
+
+
 					<tr>
-						<td ><b >Inquiry Id</b></td>
+						<td><b>Inquiry Id</b></td>
 						<td><b>Customer Id</b></td>
 						<td><b>Product Id</b></td>
 						<td><b>Quantity</b></td>
 						<td><b>Date</b></td>
 					</tr>
+
+
 					<%
 						while (resultset.next()) {
 					%>
@@ -163,6 +181,60 @@
 						<td><%=rs.getString("Order_Date")%></td>
 
 					</tr>
+					<%} %>
+
+
+					<tr align="center" bgcolor="gray">
+						<td align="center" colspan="6"><h3>Returned orders Of
+								Customers:</h3></td>
+					</tr>
+					<tr>
+						<td><b>Order No</b></td>
+						<td><b>Customer Id</b></td>
+						<td><b>Product Id</b></td>
+						<td><b>Quantity</b></td>
+						<td><b>Date</b></td>
+					</tr>
+					<%
+						while (ret.next()) {
+					%>
+					<tr>
+
+						<td><%=ret.getInt("Order_No")%></td>
+						<td><%=ret.getInt("id")%></td>
+						<td><%=ret.getInt("product_id")%></td>
+						<td><%=ret.getInt("Qty_Sold")%></td>
+						<td><%=ret.getString("Order_Date")%></td>
+
+					</tr>
+					<%
+						}
+					%>
+
+					<tr align="center" bgcolor="sky blue">
+						<td align="center" colspan="6"><h3>Stock Status Reports:</h3></td>
+					</tr>
+					<tr>
+						<td><b>Product No</b></td>
+						<td><b>Qty In Stock</b></td>
+						<td><b>Qty Sold</b></td>
+						<td><b>Qty Return</b></td>
+					</tr>
+					<%
+						while (r.next()) {
+					%>
+					<tr>
+
+
+						<td><%=r.getInt(1)%></td>
+						<td><%=r.getInt(2)%></td>
+						<td><%=r.getInt(3)%></td>
+						<td><%=r.getInt(4)%></td>
+
+
+
+
+					</tr>
 					<%
 						}
 					%>
@@ -170,6 +242,63 @@
 
 
 				</table>
+
+				<table class="table">
+
+
+					<tr align="center" bgcolor="yellow">
+						<td align="center" colspan="7"><h3>Account Receivable</h3></td>
+					</tr>
+					<tr>
+						<td><h5>
+								<b>Order No</b>
+							</h5></td>
+						<td><h5>
+								<b>Customer Id</b>
+							</h5></td>
+						<td><h5>
+								<b>Product Id</b>
+							</h5></td>
+						<td><h5>
+								<b>Quantity</b>
+							</h5></td>
+						<td><h5>
+								<b>Date</b>
+							</h5></td>
+						<td><h5>
+								<b>Amount Due</b>
+							</h5></td>
+						<td><h5>
+								<b>Amount paid</b>
+							</h5></td>
+					</tr>
+
+
+					<%
+						while (res.next()) {
+					%>
+
+
+					<tr>
+
+						<td><%=res.getInt("Order_No")%></td>
+						<td><%=res.getInt("id")%></td>
+						<td><%=res.getInt("product_id")%></td>
+						<td><%=res.getInt("Qty_Sold")%></td>
+						<td><%=res.getString("Order_Date")%></td>
+						<td><%=res.getInt("Pay_Due")%></td>
+						<td><%=res.getInt("Pay_Received")%></td>
+
+					</tr>
+					<%
+						}
+					%>
+
+
+
+
+				</table>
+
 			</form>
 		</div>
 
